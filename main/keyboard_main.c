@@ -158,22 +158,28 @@ void hid_host_device_event_callback(hid_host_device_handle_t hid_device_handle, 
     if (event == HID_HOST_DRIVER_EVENT_CONNECTED)
     {
         // 发现新设备:
-        hid_host_device_config_t dev_config = {
-            .callback = hid_host_interface_callback,
-            .callback_arg = NULL};
-        esp_err_t err = hid_host_device_open(hid_device_handle, &dev_config);
-        if (err != ESP_OK)
+        hid_host_dev_params_t dev_params;
+        hid_host_device_get_params(hid_device_handle, &dev_params);
+        // 只打开子类为 1 (Boot) 且协议为 1 (Keyboard) 的接口:
+        if (dev_params.sub_class == HID_SUBCLASS_BOOT_INTERFACE && dev_params.proto == HID_PROTOCOL_KEYBOARD)
         {
-            ESP_LOGE("App", "Failed to open HID device");
-            return;
+            hid_host_device_config_t dev_config = {
+                .callback = hid_host_interface_callback,
+                .callback_arg = NULL};
+            esp_err_t err = hid_host_device_open(hid_device_handle, &dev_config);
+            if (err != ESP_OK)
+            {
+                ESP_LOGE("App", "Failed to open HID device");
+                return;
+            }
+            err = hid_host_device_start(hid_device_handle);
+            if (err != ESP_OK)
+            {
+                ESP_LOGE("App", "Failed to start HID device");
+                return;
+            }
+            ESP_LOGI("App", "Keyboard %d connected and opened.", dev_params.iface_num);
         }
-        err = hid_host_device_start(hid_device_handle);
-        if (err != ESP_OK)
-        {
-            ESP_LOGE("App", "Failed to start HID device");
-            return;
-        }
-        ESP_LOGI("App", "Keyboard connected and opened");
     }
 }
 
