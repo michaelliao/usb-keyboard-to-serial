@@ -21,13 +21,13 @@
 #define UART_PORT UART_NUM_1  // 使用的 UART 端口
 
 // --- Key 配置 ---
-#define KEYPRESS_INTERVAL_MS 500                                  // 触发间隔，单位毫秒
+#define KEYPRESS_INTERVAL_MS 250                                  // 触发间隔，单位毫秒
 #define TIMER_INTERVAL_MS 10                                      // 定时器周期，单位毫秒
 #define TICK_COUNT_MAX (KEYPRESS_INTERVAL_MS / TIMER_INTERVAL_MS) // 计算最大计数值
 
-static uint32_t tick_counter = 0; // 计时器滴答计数器
-static uint8_t current_key = 0;   // 当前按住的键码
-static uint8_t current_mod = 0;   // 当前按住的修饰键
+static uint32_t tick_counter = 0;        // 计时器滴答计数器
+static volatile uint8_t current_key = 0; // 当前按住的键码
+static volatile uint8_t current_mod = 0; // 当前按住的修饰键
 
 // 将 USB HID 键码转换为 ASCII 字符:
 char usb_keycode_to_ascii(uint8_t key_code, uint8_t modifier)
