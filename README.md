@@ -19,3 +19,14 @@ The translation system uses two static lookup tables to map keycodes to ASCII va
 | Space                      | 0x2C         |              |
 | <code>-=[]\ ;'`,./</code>  | 0x2D ~ 0x38  |              |
 | <code>_+{}\| :"~<>?</code> | 0x2D ~ 0x38  | SHIFT        |
+
+# Default Configuration
+
+Serial Port:
+
+- Baud rate: 115200
+- Data bits: 8
+- Parity: None
+- Stop bits: 1
+- TX port: 17
+- RX port: 18 (not used)
